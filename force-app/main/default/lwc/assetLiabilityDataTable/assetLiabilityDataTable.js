@@ -43,21 +43,6 @@ export default class AssetLiabilityDataTable extends LightningElement {
       this.records = undefined;
     }
   }
-
-  // @wire(calculateAssetsLiabilities)
-  // wiredCalculations({ error, results }) {
-  //   if (results) {
-  //     this.summary = results;
-  //     this.netWorth = this.summary.netWorth;
-  //     this.assetsTotal = this.summary.assetsTotal;
-  //     this.liabilitiesTotal = this.summary.liabilitiesTotal;
-  //     this.error = undefined;
-  //   } else if (error) {
-  //     console.log('Error: '+ JSON.stringify(error));
-  //     this.error = error;
-  //     this.records = undefined;
-  //   }
-  // }
   
   showToast(title, message, variant) {
     const event = new ShowToastEvent({
