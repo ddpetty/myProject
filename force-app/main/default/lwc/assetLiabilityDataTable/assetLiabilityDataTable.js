@@ -1,4 +1,4 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import { refreshApex } from '@salesforce/apex';
 import getAssetLiabilityList from '@salesforce/apex/GetAssetLiabilityRecords.getAssetLiabilityList';
@@ -10,29 +10,31 @@ const actions = [
   { label: 'Delete', name: 'delete' }
 ];
 
-const columns = [
+let columns = [
   { label: 'Name', fieldName: 'Name', sortable: "true" },
   { label: 'Type', fieldName: 'Type__c', type: 'text', sortable: "true" },
   { label: 'Balance', fieldName: 'Balance__c', type: 'currency', sortable: "true", cellAttributes: { alignment: 'left' }},
   {
     type: 'action',
     typeAttributes: { rowActions: actions },
-  },
+  }
 ];
 
 
 export default class AssetLiabilityDataTable extends LightningElement {
-  columns = columns;
+  @track columns = columns;
   refreshTable;
-  records = [];
+  @track records = [];
   error;
 
   @wire(calculateAssetsLiabilities) summary;
 
   @wire(getAssetLiabilityList)
-  wiredRecords({ error, data }) {
-    this.refreshTable = data;
-
+  wiredRecords(response) {
+    //Resolves refresh anti-pattern on record deletion
+    this.refreshTable = response;
+    let { data, error } = response;
+    
     if (data) {
       this.records = data;
       this.error = undefined;
@@ -68,7 +70,7 @@ export default class AssetLiabilityDataTable extends LightningElement {
   // Delete record from database
   deleteAssetLiabilityRecs(row) {
     deleteAssetLiabilityRecords({ recordIds: row.Id })
-      .then(data => {
+      .then(() => {
         this.showToast('Success!', 'Record was deleted.', 'success');
         //Clear selected rows
         this.template.querySelector('lightning-datatable').selectedRows = [];
