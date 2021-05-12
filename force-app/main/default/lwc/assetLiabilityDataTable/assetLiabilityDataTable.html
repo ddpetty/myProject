@@ -1,0 +1,57 @@
+<template>
+    <lightning-card>
+        <!-- Summary -->
+        <template if:true={summary.data}>
+            <div class="slds-p-around_medium">
+                <h1 class="slds-text-title_bold">Summary</h1>
+                <div class="c-container">
+                    <lightning-layout horizontal-align="space">
+                        <lightning-layout-item padding="around-small">
+                            <div>
+                                <p>Net Worth</p>
+                                <p class="slds-text-align_center">
+                                    <lightning-formatted-number value={summary.data.netWorth} format-style="currency">
+                                    </lightning-formatted-number>
+                                </p>
+                            </div>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item padding="around-small">
+                            <p>Assets Total</p>
+                            <p class="slds-text-align_center">
+                                <lightning-formatted-number value={summary.data.assetsTotal} format-style="currency">
+                                </lightning-formatted-number>
+                            </p>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small">
+                            <p>Liabilities Total</p>
+                            <p class="slds-text-align_center">
+                                <lightning-formatted-number value={summary.data.liabilitiesTotal} format-style="currency">
+                                </lightning-formatted-number>
+                            </p>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+        </template>
+        <!-- No summary data was returned -->
+        <template if:true={summary.error}>
+            <p>No summary data could be found.</p>
+        </template>
+        <!-- Summary End -->
+        <!-- Lightning Datatable -->
+        <div class="slds-p-around_medium">
+            <template if:true={records}>
+                <h2 class="slds-text-title_bold slds-m-bottom_small">Datatable</h2>
+                <lightning-datatable key-field="Id" data={records} columns={columns} max-row-selection="1"
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </template>
+            <template if:true={error}>
+                <!-- <p>Error. Please contact System Administrator.</p> -->
+                {error}
+            </template>
+        </div>
+        <!-- Lightning Datatable End-->
+    </lightning-card>
+</template>
